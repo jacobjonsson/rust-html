@@ -1,0 +1,40 @@
+---
+source: crates/parser/tests/test.rs
+expression: "HtmlParser::new(\"<div><div><h1></h1></div></div>\").parse()"
+
+---
+{
+  "html": {
+    "Element": {
+      "name": "fragment",
+      "attributes": [],
+      "children": [
+        {
+          "Element": {
+            "name": "div",
+            "attributes": [],
+            "children": [
+              {
+                "Element": {
+                  "name": "div",
+                  "attributes": [],
+                  "children": [
+                    {
+                      "Element": {
+                        "name": "h1",
+                        "attributes": [],
+                        "children": []
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "script": [],
+  "style": []
+}

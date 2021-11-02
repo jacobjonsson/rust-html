@@ -1,0 +1,21 @@
+---
+source: crates/parser/tests/test.rs
+expression: "HtmlParser::new(\"<style>.red { background-color: red; }</style>\").parse()"
+
+---
+{
+  "html": {
+    "Element": {
+      "name": "fragment",
+      "attributes": [],
+      "children": []
+    }
+  },
+  "script": [],
+  "style": [
+    {
+      "attributes": [],
+      "source": ".red { background-color: red; }"
+    }
+  ]
+}

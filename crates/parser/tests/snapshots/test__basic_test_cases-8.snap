@@ -1,0 +1,21 @@
+---
+source: crates/parser/tests/test.rs
+expression: "HtmlParser::new(\"<script>function a() {}; console.log(a());</script>\").parse()"
+
+---
+{
+  "html": {
+    "Element": {
+      "name": "fragment",
+      "attributes": [],
+      "children": []
+    }
+  },
+  "script": [
+    {
+      "attributes": [],
+      "source": "function a() {}; console.log(a());"
+    }
+  ],
+  "style": []
+}

@@ -1,0 +1,37 @@
+---
+source: crates/parser/tests/test.rs
+expression: "HtmlParser::new(\"<div><link href=\\\"https://www.google.com\\\" /></div>\").parse()"
+
+---
+{
+  "html": {
+    "Element": {
+      "name": "fragment",
+      "attributes": [],
+      "children": [
+        {
+          "Element": {
+            "name": "div",
+            "attributes": [],
+            "children": [
+              {
+                "Element": {
+                  "name": "link",
+                  "attributes": [
+                    {
+                      "name": "href",
+                      "value": "https://www.google.com"
+                    }
+                  ],
+                  "children": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "script": [],
+  "style": []
+}
