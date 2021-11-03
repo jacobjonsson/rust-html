@@ -1,1 +1,1 @@
-A very basic html parser written in rust with zero dependencies.
+A very basic html parser.
