@@ -1,47 +1,40 @@
-use ast::{Attribute, Component, Element, Node, NodeRef, Script, Style};
+use ast::{Attribute, Document, Element, Node, Text};
 use lexer::{HtmlLexer, Token};
 
-pub struct HtmlParser {
+pub fn parse_html(source: &str) -> Document {
+    HtmlParser::new(source).parse()
+}
+
+struct HtmlParser {
     lexer: HtmlLexer,
-    fragment: NodeRef,
-    stack: Vec<NodeRef>,
-    script: Vec<Script>,
-    style: Vec<Style>,
+    document: Document,
+    stack: Vec<Node>,
     token: Token,
 }
 
 impl HtmlParser {
-    pub fn new(source: &str) -> HtmlParser {
-        let fragment = NodeRef::new(Node::Element(Element {
-            name: "fragment".into(),
-            attributes: Vec::new(),
-            children: Vec::new(),
-        }));
+    fn new(source: &str) -> HtmlParser {
+        let document = Document::new(Vec::new());
+        let fragment = Node::Document(document.clone());
 
         HtmlParser {
             lexer: HtmlLexer::new(source),
-            stack: vec![fragment.clone()],
-            script: Vec::new(),
-            style: Vec::new(),
-            fragment,
+            stack: vec![fragment],
+            document,
             token: Token::EOF,
         }
     }
 
-    pub fn parse(mut self) -> Component {
+    fn parse(mut self) -> Document {
         self.next();
         while self.token != Token::EOF {
             self.handle_token();
         }
 
-        Component {
-            html: self.fragment,
-            script: self.script,
-            style: self.style,
-        }
+        self.document.clone()
     }
 
-    fn current(&mut self) -> NodeRef {
+    fn current(&mut self) -> Node {
         self.stack.last().unwrap().clone()
     }
 
@@ -63,7 +56,6 @@ impl HtmlParser {
     }
 
     fn handle_tag(&mut self) {
-        let parent = self.current();
         let name = self.token.tag_name();
 
         if self.token.is_end_tag() {
@@ -72,69 +64,31 @@ impl HtmlParser {
             return;
         }
 
-        if self.token.tag_name().as_str() == "script" {
-            let mut source = String::new();
-            while !self.next().is_tag() {
-                source.push(self.token.character());
-            }
-            let mut script = Script {
-                attributes: Vec::new(),
-                source,
-            };
-            for attribute in self.token.attributes() {
-                script.attributes.push(Attribute {
-                    name: attribute.name.clone(),
-                    value: attribute.value.clone(),
-                });
-            }
-            self.script.push(script);
-            return;
+        let mut attributes = Vec::new();
+        for lexer::Attribute { name, value } in self.token.attributes() {
+            attributes.push(Attribute::new(name.clone(), value.clone()));
         }
 
-        if self.token.tag_name().as_str() == "style" {
-            let mut source = String::new();
-            while !self.next().is_tag() {
-                source.push(self.token.character());
-            }
-            let mut style = Style {
-                attributes: Vec::new(),
-                source,
-            };
-            for attribute in self.token.attributes() {
-                style.attributes.push(Attribute {
-                    name: attribute.name.clone(),
-                    value: attribute.value.clone(),
-                });
-            }
-            self.style.push(style);
-            return;
-        }
-
-        let mut element = Node::new_element(name.clone());
-        for attribute in self.token.attributes() {
-            element.set_element_attribute(attribute.name.clone(), attribute.value.clone());
-        }
-
-        let element_ref = NodeRef::new(element);
+        let element = Element::new(name.clone(), attributes, Vec::new());
 
         if self.token.self_closing() {
             // We don't push it onto the stack if it's self closing.
-            parent.borrow_mut().append_child(element_ref);
+            self.current().append_child(Node::Element(element))
         } else {
-            parent.borrow_mut().append_child(element_ref.clone());
-            self.stack.push(element_ref.clone());
+            self.current().append_child(Node::Element(element.clone()));
+            self.stack.push(Node::Element(element.clone()));
         }
         self.next();
     }
 
     fn handle_text(&mut self) {
-        let mut text = Node::new_text();
-        text.append_text(self.token.character());
+        let mut text = Text::new(String::new());
+        text.push(self.token.character());
 
         while let Token::Character(ch) = self.next() {
-            text.append_text(*ch);
+            text.push(*ch);
         }
 
-        self.current().borrow_mut().append_child(NodeRef::new(text));
+        self.current().append_child(Node::Text(text.clone()));
     }
 }

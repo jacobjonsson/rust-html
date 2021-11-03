@@ -1,20 +1,16 @@
 ---
 source: crates/parser/tests/test.rs
-expression: "HtmlParser::new(\"abc\").parse()"
+expression: "HtmlParser::new(\"<html></html>\").parse()"
 
 ---
 {
-  "html": {
-    "Element": {
-      "name": "fragment",
-      "attributes": [],
-      "children": [
-        {
-          "Text": "abc"
-        }
-      ]
+  "children": [
+    {
+      "Element": {
+        "name": "html",
+        "attributes": [],
+        "children": []
+      }
     }
-  },
-  "script": [],
-  "style": []
+  ]
 }

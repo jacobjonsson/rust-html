@@ -1,40 +1,22 @@
 ---
 source: crates/parser/tests/test.rs
-expression: "HtmlParser::new(\"<div><div><h1></h1></div></div>\").parse()"
+expression: "parse_html(\"<script>\n        function a() {};\n        console.log(a);\n    </script>\")"
 
 ---
 {
-  "html": {
-    "Element": {
-      "name": "fragment",
-      "attributes": [],
-      "children": [
-        {
-          "Element": {
-            "name": "div",
-            "attributes": [],
-            "children": [
-              {
-                "Element": {
-                  "name": "div",
-                  "attributes": [],
-                  "children": [
-                    {
-                      "Element": {
-                        "name": "h1",
-                        "attributes": [],
-                        "children": []
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+  "children": [
+    {
+      "Element": {
+        "name": "script",
+        "attributes": [],
+        "children": [
+          {
+            "Text": {
+              "value": "function a() {};\n        console.log(a);\n    "
+            }
           }
-        }
-      ]
+        ]
+      }
     }
-  },
-  "script": [],
-  "style": []
+  ]
 }

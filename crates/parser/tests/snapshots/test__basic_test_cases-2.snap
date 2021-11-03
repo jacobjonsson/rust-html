@@ -1,24 +1,31 @@
 ---
 source: crates/parser/tests/test.rs
-expression: "HtmlParser::new(\"<div />\").parse()"
+expression: "HtmlParser::new(\"<html>\n        <head>\n        </head>\n        <body>\n        </body>\n    </html>\").parse()"
 
 ---
 {
-  "html": {
-    "Element": {
-      "name": "fragment",
-      "attributes": [],
-      "children": [
-        {
-          "Element": {
-            "name": "div",
-            "attributes": [],
-            "children": []
+  "children": [
+    {
+      "Element": {
+        "name": "html",
+        "attributes": [],
+        "children": [
+          {
+            "Element": {
+              "name": "head",
+              "attributes": [],
+              "children": []
+            }
+          },
+          {
+            "Element": {
+              "name": "body",
+              "attributes": [],
+              "children": []
+            }
           }
-        }
-      ]
+        ]
+      }
     }
-  },
-  "script": [],
-  "style": []
+  ]
 }

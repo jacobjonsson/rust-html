@@ -1,47 +1,22 @@
 ---
 source: crates/parser/tests/test.rs
-expression: "HtmlParser::new(\"<div><div></div></div><div><div></div></div>\").parse()"
+expression: "parse_html(\"<style>\n        .red {\n            background-color: \\\"red\\\";\n        }\n    </style>\")"
 
 ---
 {
-  "html": {
-    "Element": {
-      "name": "fragment",
-      "attributes": [],
-      "children": [
-        {
-          "Element": {
-            "name": "div",
-            "attributes": [],
-            "children": [
-              {
-                "Element": {
-                  "name": "div",
-                  "attributes": [],
-                  "children": []
-                }
-              }
-            ]
+  "children": [
+    {
+      "Element": {
+        "name": "style",
+        "attributes": [],
+        "children": [
+          {
+            "Text": {
+              "value": ".red {\n            background-color: \"red\";\n        }\n    "
+            }
           }
-        },
-        {
-          "Element": {
-            "name": "div",
-            "attributes": [],
-            "children": [
-              {
-                "Element": {
-                  "name": "div",
-                  "attributes": [],
-                  "children": []
-                }
-              }
-            ]
-          }
-        }
-      ]
+        ]
+      }
     }
-  },
-  "script": [],
-  "style": []
+  ]
 }

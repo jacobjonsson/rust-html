@@ -1,24 +1,58 @@
 ---
 source: crates/parser/tests/test.rs
-expression: "HtmlParser::new(\"<div></div>\").parse()"
+expression: "HtmlParser::new(\"<html>\n        <head>\n            <meta charset=\\\"utf-8\\\" />\n        </head>\n        <body>\n            <h1>Hello world</h1>\n        </body>\n    </html>\").parse()"
 
 ---
 {
-  "html": {
-    "Element": {
-      "name": "fragment",
-      "attributes": [],
-      "children": [
-        {
-          "Element": {
-            "name": "div",
-            "attributes": [],
-            "children": []
+  "children": [
+    {
+      "Element": {
+        "name": "html",
+        "attributes": [],
+        "children": [
+          {
+            "Element": {
+              "name": "head",
+              "attributes": [],
+              "children": [
+                {
+                  "Element": {
+                    "name": "meta",
+                    "attributes": [
+                      {
+                        "name": "charset",
+                        "value": "utf-8"
+                      }
+                    ],
+                    "children": []
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "Element": {
+              "name": "body",
+              "attributes": [],
+              "children": [
+                {
+                  "Element": {
+                    "name": "h1",
+                    "attributes": [],
+                    "children": [
+                      {
+                        "Text": {
+                          "value": "Hello world"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
           }
-        }
-      ]
+        ]
+      }
     }
-  },
-  "script": [],
-  "style": []
+  ]
 }
